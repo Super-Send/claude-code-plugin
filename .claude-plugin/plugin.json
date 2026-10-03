@@ -1,0 +1,22 @@
+{
+  "name": "supersend",
+  "displayName": "SuperSend",
+  "version": "0.1.0",
+  "description": "Cold email from Claude Code: set up SuperSend, write and launch campaigns, work through replies, and track results with the supersend CLI.",
+  "author": {
+    "name": "SuperSend",
+    "email": "contact@supersend.io",
+    "url": "https://supersend.io"
+  },
+  "homepage": "https://docs.supersend.io/docs/cli",
+  "license": "MIT",
+  "keywords": ["cold-email", "outbound", "email", "linkedin", "sales", "supersend"],
+  "userConfig": {
+    "session_brief": {
+      "type": "boolean",
+      "title": "Session brief",
+      "description": "At the start of each new session, add a short SuperSend status (unread replies, campaigns, inboxes) to Claude's context.",
+      "default": true
+    }
+  }
+}

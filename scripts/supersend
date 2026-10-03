@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# The SuperSend CLI: a globally installed `supersend` when there is one, otherwise the published
+# npm package through npx (downloaded on first use, then cached).
+if command -v supersend >/dev/null 2>&1; then
+  exec supersend "$@"
+fi
+exec npx --yes --package @super-send/mcp-server@latest supersend "$@"
