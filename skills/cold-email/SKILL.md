@@ -96,7 +96,7 @@ Pause with `supersend campaigns deactivate --id <id>`.
 ## 5. Every day
 
 - `supersend status`: unread replies, campaigns, inboxes, billing, and to-dos. (The Claude Code plugin adds this brief at the start of each new session.)
-- `supersend replies`: unread replies with who, company, campaign, and AI category. `supersend replies show <id>` reads one.
+- `supersend replies`: unread replies from contacts with who, company, campaign, and AI category (bounces and auto-replies are left out; `--include-other` adds them). `supersend replies show <id>` reads one.
 - For each reply, draft an answer, show it, and send only after a yes: `supersend replies send <id> --message "…"` (email goes from the inbox the conversation came in on).
 - Sort as you go: `supersend replies label <id> --label Interested`, and `supersend replies done <id>` (read and archived).
 - Out of office or "not now": label it and mark it done; don't reply unless asked.
