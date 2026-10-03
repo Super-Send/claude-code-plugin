@@ -76,7 +76,11 @@ Create it with a simple (linear) sequence. Nodes chain start → email → wait 
 
 ## 4. Review and launch
 
-Run `supersend campaigns review --id <id>`: the steps with their timing, who sends, contacts, schedule, daily volume, and checks. Fix anything blocking. Then show the user what will happen ("starts Monday 9:00 for 400 contacts, up to 180 emails a day") and launch only after they say yes:
+Run `supersend campaigns review --id <id>`: the steps with their timing, who sends, contacts, schedule, daily volume, and checks. Fix anything blocking.
+
+Then send a test of every email step to the user's own inbox: `supersend campaigns test-send --id <id>`. It goes out from one of the campaign's inboxes with the variables filled from a real contact; nothing is sent to contacts. Add `--step 2` for one step, `--variant b` for an A/B variant, or `--to` to send it to an address the user names. Ask the user to open the tests (and check spam) and fix anything they don't like before launch.
+
+Then show the user what will happen ("starts Monday 9:00 for 400 contacts, up to 180 emails a day") and launch only after they say yes:
 
 ```bash
 supersend campaigns complete --campaign-id <id>   # only if the review says it's a draft
