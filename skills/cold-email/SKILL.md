@@ -5,13 +5,17 @@ description: Run cold email (and LinkedIn outreach) with SuperSend from the term
 
 # Cold email with SuperSend
 
+<!-- run-cli:start (supersend.io/agents.md replaces this block with instructions for any agent) -->
 You run everything through the `supersend` CLI. Run it as:
 
 ```bash
 "${CLAUDE_PLUGIN_ROOT}/scripts/supersend" <command>
 ```
 
-(Below, `supersend` means that.) Output is JSON when you run it, so parse it. `supersend docs` lists every command with an example; `supersend docs <group>` shows one group. `supersend api <path>` reaches any API endpoint the commands don't cover (always GET unless `-X`).
+(Below, `supersend` means that.)
+<!-- run-cli:end -->
+
+Output is JSON when you run it, so parse it. `supersend docs` lists every command with an example; `supersend docs <group>` shows one group. `supersend api <path>` reaches any API endpoint the commands don't cover (always GET unless `-X`).
 
 ## Rules
 
@@ -91,7 +95,7 @@ Pause with `supersend campaigns deactivate --id <id>`.
 
 ## 5. Every day
 
-- `supersend status`: unread replies, campaigns, inboxes, billing, and to-dos. A new session may already include this brief.
+- `supersend status`: unread replies, campaigns, inboxes, billing, and to-dos. (The Claude Code plugin adds this brief at the start of each new session.)
 - `supersend replies`: unread replies with who, company, campaign, and AI category. `supersend replies show <id>` reads one.
 - For each reply, draft an answer, show it, and send only after a yes: `supersend replies send <id> --message "…"` (email goes from the inbox the conversation came in on).
 - Sort as you go: `supersend replies label <id> --label Interested`, and `supersend replies done <id>` (read and archived).

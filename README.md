@@ -24,7 +24,7 @@ Then start Claude Code and say "help me with cold email". Claude signs you in wi
 
 ## Develop
 
-This repository is both the plugin and its marketplace. Its source lives in SuperSend's main repository (`claude-plugin/`), next to the CLI it drives, and is published here. Validate a checkout with:
+The same playbook, for any agent, is served at [supersend.io/agents.md](https://supersend.io/agents.md) (built from `skills/cold-email/SKILL.md`; keep its `run-cli` markers). This repository is both the plugin and its marketplace. Its source lives in SuperSend's main repository (`claude-plugin/`), next to the CLI it drives, and is published here. Validate a checkout with:
 
 ```bash
 npx @anthropic-ai/claude-code plugin validate --strict .
