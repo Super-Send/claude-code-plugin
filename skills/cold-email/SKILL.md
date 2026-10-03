@@ -28,6 +28,8 @@ Output is JSON when you run it, so parse it. `supersend docs` lists every comman
 
 Run `supersend whoami`. If it fails with "Not signed in", run `supersend login`. It prints a link and a code and exits: give the user the link, ask them to approve the code shown on the page, then run `supersend login` again to finish.
 
+**Team:** a team is a workspace (an agency often has one per client), and commands work in one team at a time. Someone in one team never has to pick. If a command says to pick a team, show the user their team names, ask which one, and run `supersend teams use <name>`. To work in another team for one command, add `--team-id <name>`. `supersend whoami` shows the current team.
+
 ## 2. Get the account ready
 
 Run `supersend setup status`. `next_steps` lists what's missing, in order, and who does each step.
@@ -37,7 +39,7 @@ Run `supersend setup status`. `next_steps` lists what's missing, in order, and w
   - Buy: plan 2-3 look-alike domains (for acme.com: tryacme.com, getacme.com, never the main domain) with 2-3 inboxes each, show the cost, then `supersend setup inbox-checkout --file plan.json` and give them the checkout link. Bought inboxes arrive connected and warming up on their own (24-48 hours); nothing else to do.
   - Their own: give them the connect link from `setup status`.
 - **Warmup:** inboxes need about 14 days of warmup before full volume. Start it for any inbox that isn't warming: `supersend senders update --id <id> --warm true`.
-- **Sender profile:** campaigns send from a sender profile (a group of inboxes): `supersend senders create-profile --team-id <team> --name <name>`, then `supersend senders update --id <inbox> --sender-profile-id <profile>` for each inbox.
+- **Sender profile:** campaigns send from a sender profile (a group of inboxes): `supersend senders create-profile --name <name>`, then `supersend senders update --id <inbox> --sender-profile-id <profile>` for each inbox.
 
 Run `supersend setup status` again after each step.
 
@@ -53,30 +55,24 @@ Write 3 emails, all plain text:
 
 Show the copy and adjust it with the user before creating anything.
 
-Create it with a simple (linear) sequence. Nodes chain start → email → wait → email…; follow-ups set `"send_as_reply": true`; waits use `"wait"` and `"wait_unit": "days"`:
+Create it from the emails in order. A follow-up without its own `subject` replies in the same thread; `wait_days` is the gap after the previous email:
 
 ```json
 {
-  "team_id": "<team-uuid>", "name": "Fintech CTOs", "version": 3,
+  "name": "Fintech CTOs",
   "sender_profile_ids": ["<profile-uuid>"],
-  "timezone": "America/New_York",
-  "days": { "monday": true, "tuesday": true, "wednesday": true, "thursday": true, "friday": true },
-  "hours": [{ "start": "09:00", "end": "17:00" }],
-  "nodes": [
-    { "id": "start", "type": "startNode", "position": { "x": 0, "y": 0 }, "data": {} },
-    { "id": "e1", "type": "emailNode", "position": { "x": 0, "y": 100 }, "data": { "subject_a": "quick question", "body_a": "Hi {{first_name}}, …" } },
-    { "id": "w1", "type": "waitNode", "position": { "x": 0, "y": 200 }, "data": { "wait": 3, "wait_unit": "days" } },
-    { "id": "e2", "type": "emailNode", "position": { "x": 0, "y": 300 }, "data": { "send_as_reply": true, "body_a": "…" } }
+  "emails": [
+    { "subject": "quick question", "body": "Hi {{first_name}}, …" },
+    { "body": "…", "wait_days": 3 },
+    { "body": "…", "wait_days": 4 }
   ],
-  "edges": [
-    { "id": "a", "source": "start", "target": "e1" },
-    { "id": "b", "source": "e1", "target": "w1" },
-    { "id": "c", "source": "w1", "target": "e2" }
-  ]
+  "timezone": "America/New_York",
+  "days": ["monday", "tuesday", "wednesday", "thursday", "friday"],
+  "hours": "09:00-17:00"
 }
 ```
 
-`supersend campaigns setup-outbound --file campaign.json` creates it (not live). Import contacts with `supersend contacts bulk-import --file contacts.json` (each contact needs `email` or `linkedin_url`; extra columns go in `custom`). To A/B test, add `subject_b`/`body_b` to an email step.
+`supersend campaigns preview --file campaign.json` shows the draft (each email with the day it goes out, the schedule, the sending inboxes, anything to fix) without creating anything; show it to the user. After they're happy, `supersend campaigns setup-outbound --file campaign.json` creates it (not live). Import contacts with `supersend contacts bulk-import --file contacts.json` (each contact needs `email` or `linkedin_url`; extra columns go in `custom`). To A/B test, add `subject_b`/`body_b` to an email.
 
 ## 4. Review and launch
 
@@ -107,6 +103,6 @@ Pause with `supersend campaigns deactivate --id <id>`.
 
 ## 7. Deliverability
 
-- `supersend diagnose deliverability --team-id <id>` and `supersend diagnose sender-health --team-id <id>` find problem inboxes and domains.
+- `supersend diagnose deliverability` and `supersend diagnose sender-health` find problem inboxes and domains.
 - Placement test (uses credits; ask first): `supersend placement-tests run --sender-id <inbox> --campaign-id <campaign>`, then `supersend placement-tests get --id <test>` every few minutes until it's completed. It shows inbox vs spam at each seed mailbox.
 - If bounces are high, pause the campaign, validate the list (`supersend contacts bulk-action` with action `validate_emails`; ask first), and look at bounce reasons with `supersend senders bounce-insights --id <inbox>`.
